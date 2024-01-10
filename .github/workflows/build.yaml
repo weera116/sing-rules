@@ -56,7 +56,7 @@ jobs:
           if ! git status --porcelain; then exit 1; fi
           git add .
           git commit -m "Update rules"
-          git tag "$(date +%Y-%m-%dT%H:%M:%S)"
+          git tag "$(date +%Y%m%dT%H%M)"
 
       - name: Push
         uses: ad-m/github-push-action@master

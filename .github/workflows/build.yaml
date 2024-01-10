@@ -39,28 +39,28 @@ jobs:
           bash <(curl -fsSL https://sing-box.app/deb-install.sh)
           sing-box
 
-      - name: Checkout
+      - name: Checkout Rules
         uses: actions/checkout@v4
         with:
           repository: Loyalsoldier/v2ray-rules-dat
           path: dat
           ref: release
 
+      - name: Check if rules have been changed
+        run: |
+          git -C dat rev-parse HEAD >commit
+          if diff commit dat/commit; then mv commit dat; else exit 1 fi
+
       - name: Build geo{ip,site}.dat
         run: |
           geo convert ip -i v2ray -o sing -f rules/geoip.db dat/geoip.dat
           geo convert site -i v2ray -o sing -f rules/geosite.db dat/geosite.dat
 
-      - name: Commit and tag
+      - name: Commit and Push
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          if ! git status --porcelain; then exit 1; fi
           git add .
           git commit -m "Update rules"
           git tag "$(date +%Y%m%dT%H%M)"
-
-      - name: Push
-        uses: ad-m/github-push-action@master
-        with:
-          tags: true
+          git push --follow-tags

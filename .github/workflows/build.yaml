@@ -16,31 +16,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Checkout geo
-        uses: actions/checkout@v4
-        with:
-          repository: MetaCubeX/geo
-          path: geo
-
-      - name: Checkout sing-box
-        uses: actions/checkout@v4
-        with:
-          repository: SagerNet/sing-box
-          path: sing-box
-
       - name: Setup Go
         uses: actions/setup-go@v5
 
-      - name: Build geo
+      - name: Install geo
         run: |
-          cd geo
-          go install ./cmd/geo
+          go install -v github.com/metacubex/geo/cmd/geo@master
           geo
 
-      - name: Build sing-box
+      - name: Install sing-box
         run: |
-          cd sing-box
-          make install
+          bash <(curl -fsSL https://sing-box.app/deb-install.sh)
           sing-box
 
       - name: Checkout

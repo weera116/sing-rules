@@ -49,7 +49,7 @@ jobs:
       - name: Check if rules have been changed
         run: |
           git -C dat rev-parse HEAD | tee commit.txt
-          if diff commit.txt dat/commit.txt; then exit 1; else mv commit.txt dat fi
+          if diff commit.txt dat/commit.txt; then exit 1; else mv commit.txt dat; fi
 
       - name: Build geo{ip,site}.dat
         run: |

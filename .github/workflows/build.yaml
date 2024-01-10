@@ -20,8 +20,8 @@ jobs:
       - name: Build geo
         run: |
           go version
-          go install -v github.com/MetaCubeX/geo/cmd/geo@master
-          go install -v github.com/SagerNet/sing-box/cmd/sing-box@master
+          go install -v github.com/metacubex/geo/cmd/geo@master
+          go install -v github.com/sagernet/sing-box/cmd/sing-box@master
           geo
           sing-box
       - name: Checkout

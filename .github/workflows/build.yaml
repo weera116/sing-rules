@@ -1,0 +1,39 @@
+name: Build sing-box rule-sets
+on:
+  schedule:
+    - cron: "0 22 * * *"
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "**/README.md"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: MetaCubeX/geo
+          path: geo
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: Loyalsoldier/v2ray-rules-dat
+          path: rules
+          branch: release
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: geo/go.mod
+          cache-dependency-path: geo/go.sum
+      - name: Display
+        run: |
+          go version
+          geo
+          geo convert rules/geoip.dat -i v2ray -o sing -f geoip.db
+          geo convert rules/geosite.dat -i v2ray -o sing -f geosite.db

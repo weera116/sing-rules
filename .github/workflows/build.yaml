@@ -15,18 +15,42 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Checkout geo
+        uses: actions/checkout@v4
+        with:
+          repository: MetaCubeX/geo
+          path: geo
+
+      - name: Checkout sing-box
+        uses: actions/checkout@v4
+        with:
+          repository: SagerNet/sing-box
+          path: sing-box
+
       - name: Setup Go
         uses: actions/setup-go@v5
+
       - name: Build geo
         run: |
-          go version
-          go install -v github.com/metacubex/geo/cmd/geo@master
-          go install -v github.com/sagernet/sing-box/cmd/sing-box@master
+          cd geo
+          go install ./cmd/geo
           geo
+
+      - name: Build sing-box
+        run: |
+          cd sing-box
+          make install
           sing-box
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
           repository: Loyalsoldier/v2ray-rules-dat
           path: rules
           ref: release
+
+      - name: Convert geo{ip,site}.dat
+        run: |
+          geo convert rules/geoip.dat -i v2ray -o sing -f geoip.db
+          geo convert rules/geosite.dat -i v2ray -o sing -f geosite.db

@@ -16,13 +16,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Checkout geo
+        uses: actions/checkout@v4
+        with:
+          repository: MetaCubeX/geo
+          path: geo
+
       - name: Setup Go
         uses: actions/setup-go@v5
+        with:
+          go-version-file: geo/go.mod
+          cache-dependency-path: geo/go.sum
 
       - name: Install geo
         run: |
-          go install -v github.com/metacubex/geo/cmd/geo@master
-          geo
+          cd geo && go install -v ./cmd/geo
 
       - name: Install sing-box
         run: |
@@ -38,5 +46,5 @@ jobs:
 
       - name: Convert geo{ip,site}.dat
         run: |
-          geo convert rules/geoip.dat -i v2ray -o sing -f geoip.db
-          geo convert rules/geosite.dat -i v2ray -o sing -f geosite.db
+          geo convert ip -i v2ray -o sing -f geoip.db rules/geoip.dat
+          geo convert site -i v2ray -o sing -f geosite.db rules/geosite.dat

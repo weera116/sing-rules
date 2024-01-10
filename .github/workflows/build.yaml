@@ -41,10 +41,24 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: Loyalsoldier/v2ray-rules-dat
-          path: rules
+          path: dat
           ref: release
 
-      - name: Convert geo{ip,site}.dat
+      - name: Build geo{ip,site}.dat
         run: |
-          geo convert ip -i v2ray -o sing -f geoip.db rules/geoip.dat
-          geo convert site -i v2ray -o sing -f geosite.db rules/geosite.dat
+          geo convert ip -i v2ray -o sing -f rules/geoip.db dat/geoip.dat
+          geo convert site -i v2ray -o sing -f rules/geosite.db dat/geosite.dat
+
+      - name: Commit and tag
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          if git status --porcelain; then exit 1; fi
+          git add .
+          git commit -m "Update rules"
+          git tag "$(date +%Y-%m-%dT%H:%M:%S)"
+
+      - name: Push
+        uses: ad-m/github-push-action@master
+        with:
+          tags: true

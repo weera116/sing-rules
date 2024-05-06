@@ -1,6 +1,4 @@
-name: Build sing-box rule-sets
-on:
-  schedule:
+"name: Build sing-box rule-seton:schedule:
     - cron: "0 0 * * *"
   push:
     branches:
